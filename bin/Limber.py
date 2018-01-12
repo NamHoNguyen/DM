@@ -12,7 +12,7 @@ import itertools
 
 colors = itertools.cycle(['b','g','r','c','m','y','k'])
 
-def Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zmaxArr=[],omk=0,whatPS=-1,log=True):
+def Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zArr=[],omk=0,whatPS=-1,log=True):
     c = 2.99792458e5
     '''
     # Planck 2015
@@ -98,7 +98,7 @@ def Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zmaxArr=[],omk=0,whatPS=-1,
     dchis = dchis[imin:imax]
     chis = chis[imin:imax]
     zs = zs[imin:imax]
-    zs0 = zs
+    zs0 = zs*1.
     #Get lensing window function (flat universe)
     win = ((chistar-chis)/(chis**2*chistar))**2
     #Do integral over chi
@@ -120,9 +120,9 @@ def Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zmaxArr=[],omk=0,whatPS=-1,
     #cl_kappa=np.zeros(ls.shape)
     cl_kappa=np.zeros([len(ls),len(zs)])
     w = np.ones(chis.shape) #this is just used to set to zero k values out of range of interpolation
-    if len(zmaxArr) != 0:
+    if len(zArr) != 0:
         index = 0
-        ClsArr = np.zeros([len(ls),len(zmaxArr)])
+        ClsArr = np.zeros([len(ls),len(zArr)])
 
     test = False
     for i, l in enumerate(ls):
@@ -133,6 +133,7 @@ def Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zmaxArr=[],omk=0,whatPS=-1,
             chis = chis[chisrange]
             dchis = dchis[chisrange]      
             zs = zs[chisrange]
+            zs0 = zs*1.
             win = win[chisrange]
             w = w[chisrange]
         
@@ -153,12 +154,28 @@ def Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zmaxArr=[],omk=0,whatPS=-1,
     if test:
         cl_kappa = (ls*(ls+1))**2 * cl_kappa[:,0]
         return np.transpose(np.vstack([ls,cl_kappa]))
-                    
-    if len(zmaxArr) != 0:
-        for zmax in zmaxArr:
+    '''
+    print cl_kappa
+    print cl_kappa[:,np.where(zs0<zmaxArr[1])],cl_kappa[:,np.where(zs0<zmaxArr[1])].sum(axis=1),cl_kappa[:,np.where(zs0<zmaxArr[1])].sum(axis=1).sum(axis=1)
+    sys.exit()
+    '''
+    if len(zArr) != 0:
+        for zmin,zmax in zArr:
+            izmin = -1
+            izmax = -1
+            nz = len(zs0)
             #print '------------\n'
+            for i in range(nz):
+                if (izmin!=-1) and (izmax!=-1):
+                    break
+                if (zs0[i]>zmin) and (izmin==-1):
+                    izmin = i
+                if (zs0[nz-i-1]<zmax) and (izmax==-1):
+                    izmax = nz-i
+            #print zmin,zmax,zs0[izmin:izmax]
             #print ClsArr[:,index],cl_kappa[:,np.where(zs<zmax)].sum(axis=1).sum(axis=1)
-            ClsArr[:,index]=cl_kappa[:,np.where(zs0<zmax)].sum(axis=1).sum(axis=1) * (ls*(ls+1))**2
+            #ClsArr[:,index]=cl_kappa[:,np.where(zs0<zmax)].sum(axis=1).sum(axis=1) * (ls*(ls+1))**2
+            ClsArr[:,index]=cl_kappa[:,izmin:izmax].sum(axis=1) * (ls*(ls+1))**2
             index+=1
         return np.hstack([ls.reshape(len(ls),1),ClsArr])
     else:
@@ -170,9 +187,9 @@ def Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zmaxArr=[],omk=0,whatPS=-1,
     cl_limber= 4*cl_kappa/2/np.pi #convert kappa power to [l(l+1)]^2C_phi/2pi (what cl_camb is)
 
 def main(argv):
-    '''
-    powerFiles = ['May21_wdm_1.0_cut_ibarrier_iconc.dat'] #'May21_cdm_1.0_cut_ibarrier_iconc.dat','May21_fdm_1.0_cut_ibarrier_iconc.dat']  #'May12_fdm_1.0_cut_zmax14_ibarrier_iconc.dat'] #'May12_cdm_0.1_cut_zmax14.dat',
-    labels  = ['WF_WDM_1.0_cut_ibarrier_iconc'] #'WF_CDM_1.0_cut_ibarrier_iconc','WF_FDM_1.0_cut_ibarrier_iconc'] #'WF_CDM_cut_zmax14',
+    
+    powerFiles = ['Oct16_fdm_0.5_cut_ibarrier_iconc.dat','Oct16_fdm_1.5_cut_ibarrier_iconc.dat'] #['May21_cdm_1.0_cut_ibarrier_iconc.dat']#['May21_wdm_1.0_cut_ibarrier_iconc.dat'] #'May21_cdm_1.0_cut_ibarrier_iconc.dat','May21_fdm_1.0_cut_ibarrier_iconc.dat']  #'May12_fdm_1.0_cut_zmax14_ibarrier_iconc.dat'] #'May12_cdm_0.1_cut_zmax14.dat',
+    labels  = ['WF_FDM_0.5_cut_ibarrier_iconc','WF_FDM_1.5_cut_ibarrier_iconc']#['WF_CDM_1.0_cut_ibarrier_iconc']#['WF_WDM_1.0_cut_ibarrier_iconc'] #'WF_CDM_1.0_cut_ibarrier_iconc','WF_FDM_1.0_cut_ibarrier_iconc'] #'WF_CDM_cut_zmax14',
     whatPS = [2,2,2,2]
     
     zmaxArr = [[],[],[],[],[],[],[]]
@@ -196,10 +213,16 @@ def main(argv):
     
     lmin = 10
     lmax = 60000 #25600
-    
+    '''
     nl = 1000
     log = False
-    #zmaxArr = [0.5,1.,2.,3.,4.,5.,10.,12.]
+
+    #zmins = [0.,2.,4.,6.,0.]
+    #zmaxs = [2.,4.,6.,500.,500.]
+    zmins = [0.,1.,2.,3.,4.,5.,6.]
+    zmaxs = [1.,2.,3.,4.,5.,6.,500.]
+    zArr = zip(zmins,zmaxs)
+    zArr = []
     #zmaxArr = [[],[],[0.5,1.,2.,3.,4.,5.,10.,15.,20.,600.]] #[2.,4.,5.,10.,12.,15.,20.]
     #zmaxArr = [[],[],[0.1,5.,12.,20.,600.]] #[2.,4.,5.,10.,12.,15.,20.]
     #zmaxArr = [4.,12.]
@@ -219,25 +242,26 @@ def main(argv):
         except:
             dummyFile = np.loadtxt(os.environ['HMCODE_DIR']+powerFile)
             powerFile = os.environ['HMCODE_DIR']+powerFile
-        Clkk = Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zmaxArr[i],whatPS=whatPS[i],log=log)
+        Clkk = Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zArr,whatPS=whatPS[i],log=log)
         #print Clkk
         l = Clkk[:,0]
         
-        if len(zmaxArr[i])!=0:
-            for j in range(len(zmaxArr[i])):
+        if len(zArr)!=0:
+            for j in range(len(zArr)):
                 #ax.semilogx(l,(l*(l+1.))**2*Cls[:,j+1],label='z<'+str(zmaxArr[j]))
                 #print j
                 #print Clkk[:,j+1]
-                ax.loglog(l,Clkk[:,j+1],label='z<'+str(zmaxArr[i][j]))
+                ax.loglog(l,Clkk[:,j+1],label='z='+str(zArr[j]))
         else:
             #ax.loglog(l,(l*(l+1.))**2*Cls[:,1]/(2.*np.pi),label=label)
             ax.loglog(l,Clkk[:,1],color,label=label)
             #ax.plot(l,(l*(l+1.))**2*Cls[:,1]/4.,label=label)
-            np.savetxt('data/May21_matter2lens_'+label+'_fCls.csv',Clkk)
+            np.savetxt('data/Oct16_matter2lens_'+label+'_fCls.csv',Clkk)
             
-    ax.set_ylabel('$[l(l+1)]^2C_l^{\phi\phi}/4$',size=20)
-    ax.set_xlabel('l',size=20)
+    ax.set_ylabel('$[\ell(\ell+1)]^2C_\ell^{\phi\phi}/4$',size=20)
+    ax.set_xlabel('$\ell$',size=20)
     plt.legend(loc='lower left')
+    #plt.savefig('output/Oct10_Clkk_zrange2.png')
     plt.show()
 if (__name__ == "__main__"):
     main(sys.argv[1:])

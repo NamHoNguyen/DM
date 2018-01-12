@@ -2,11 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #for noise in np.linspace(0.1,1.0,10):
-for noise in [0.1]:
+for noise in [1.0,2.0,2.5]:
     print 'noise=',noise
-    prefix = 'data/May27_gradCut_2000_polComb_'
-    #suffix = '_beamY_7.0_noiseY_'+str(noise)+'_tellminY_100.0_tellmaxY_30000.0_kmax_30000.txt'
-    suffix = '_beamY_0.3_noiseY_'+str(noise)+'_tellminY_100_tellmaxY_45000_kmax_60000.txt'
+    #prefix = 'data/Aug6_gradCut_2000_polComb_'
+    prefix = 'dump/Oct20_gradCut_2000_polComb_'
+    suffix = '_beamY_2.0_noiseY_'+str(noise)+'_tellminY_30.0_tellmaxY_4000.0_kmax_5000.txt'
+    #suffix = '_beamY_0.3_noiseY_'+str(noise)+'_tellminY_100_tellmaxY_45000_kmax_60000.txt'
     
     data = np.loadtxt(prefix+'TT'+suffix)
     data[:,1] = 0.*data[:,1]

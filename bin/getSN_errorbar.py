@@ -15,7 +15,7 @@ fskys = [0.1]
 noises = [0.1,0.5]
 Lmins = [100]
 Lmaxs = [60000]
-prefixs = ['May26_gradCut_2000_']
+prefixs = ['Aug6_gradCut_2000_'] # noise from non-linear CMB Cls
 ests = ['TT']
 lmins = [100]
 lmaxs= [45000]
@@ -30,7 +30,7 @@ for (lmin,lmax),Lmax,beam,fsky,noise,Lmin,prefix,est in itertools.product(lRange
 
     ellMid,SN1 = snkk_wrtCDM(NlFile,ClsCDM,Cls1,Lmin,Lmax,dL,fsky)
     data = np.transpose(np.vstack([ellMid,np.sqrt(SN1)]))
-    np.savetxt('data/June3_SNvsL_noise'+str(noise)+'.csv',data)
+    np.savetxt('data/Aug6_SNvsL_noise'+str(noise)+'.csv',data)
     SN1 = np.sqrt(SN1.sum())
     print lmin,lmax,Lmin,Lmax,beam,fsky,noise,prefix,est,SN1 #,SN2,SN3
     i+=1

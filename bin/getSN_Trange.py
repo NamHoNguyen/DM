@@ -15,7 +15,7 @@ fskys = [0.1]
 noises = [0.1]
 Lmins = [100]
 Lmaxs = [60000]
-prefixs = ['May26_gradCut_2000_']
+prefixs = ['Aug6_gradCut_2000_']
 ests = ['TT']
 print 'lmin,lmax,Lmin,Lmax,beam,fksy,noise,prefix,est,S/N'
 ############## TMIN ####################
@@ -31,7 +31,7 @@ for (lmin,lmax),Lmax,beam,fsky,noise,Lmin,prefix,est in itertools.product(lRange
     data[i,1] = SN1
     print lmin,lmax,Lmin,Lmax,beam,fsky,noise,prefix,est,SN1 #,SN2,SN3
     i+=1
-np.savetxt('data/June3_SNvsTMin.csv',data)
+np.savetxt('data/Aug6_SNvsTMin.csv',data)
 ############## LMAX ####################
 lRange = [(x,y) for x in [100] for y in np.hstack([[1000],np.arange(5000,46000,1000)])]
 data = np.zeros([len(lRange),2])
@@ -45,5 +45,5 @@ for (lmin,lmax),Lmax,beam,fsky,noise,Lmin,prefix,est in itertools.product(lRange
     data[i,1] =SN1
     print lmin,lmax,Lmin,Lmax,beam,fsky,noise,prefix,est,SN1 #,SN2,SN3
     i+=1
-np.savetxt('data/June3_SNvsTMax.csv',data)
+np.savetxt('data/Aug6_SNvsTMax.csv',data)
                         

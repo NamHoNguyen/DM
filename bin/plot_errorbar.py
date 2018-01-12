@@ -27,8 +27,7 @@ fdm = interp1d(Cls1[:,0],Cls1[:,1],bounds_error=True)
 
 nbin = 20
 Lrange = np.linspace(10000,60000,nbin)
-#dataFile = ['June2_SNvsL_noise0.1.csv','June2_SNvsL_noise0.5.csv']
-dataFile = ['June3_SNvsL_noise0.1.csv','June3_SNvsL_noise0.5.csv']
+dataFile = ['Aug6_SNvsL_noise0.1.csv','Aug6_SNvsL_noise0.5.csv']
 label = ['0.1 $\mu$K, 4000 deg$^2$','0.5 $\mu$K, 4000 deg$^2$']
 ls = ['-','--']
 shiftFactor = 0.
@@ -75,4 +74,4 @@ plt.xlim([10000,45000])
 plt.ylim([1.3e-11,2.2e-10])
 plt.yscale('log')
 #plt.show()
-plt.savefig('output/June3_errorbar.pdf')
+plt.savefig('output/Aug6_errorbar.pdf')

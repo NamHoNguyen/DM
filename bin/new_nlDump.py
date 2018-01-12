@@ -71,7 +71,8 @@ def lensNoise(Config,expName,lensName,beamOverride=None,noiseTOverride=None,lkne
     #lmap = lm.liteMapFromFits(os.environ['DERIVGEN_DIR']+"data/templateMap_27k.fits")
     lpad = 60000
     
-    cambRoot = os.environ['CMBPROJ_DIR']+"data/TheorySpectra/Nov10_highAcc_CDM"
+    #cambRoot = os.environ['CMBPROJ_DIR']+"data/TheorySpectra/Nov10_highAcc_CDM"
+    cambRoot = "data/Aug6_highAcc_CDM"
     theory = loadTheorySpectraFromCAMB(cambRoot,unlensedEqualsLensed=True,useTotal=False,lpad=lpad)
     '''
     from orphics.theory.cosmology import Cosmology
@@ -128,24 +129,28 @@ Config.optionxform=str
 Config.read(iniFile)
 
 
-saveRoot = "output/dump/May31" #"output/dump/Mar13"
+saveRoot = "dump/Oct20" #"output/dump/Mar13"
 #expName = 'DM-9.5arcsec' #'DM-18arcsec'
-expName = 'DM-18arcsec'
+#expName = 'DM-18arcsec'
+expName = 'DM-S4'
 lensName = 'lensing'
-kmax = 45000 #39200
-#kmax = 5000
+kmax = 5000 
+#kmax = 60000 
+#kmax = 39200
 
 #lmin = 100
 #lmax = 45000
-delensTolerance = 1.0
+delensTolerance = None
+#delensTolerance = 1.0
 
 #tRange1 = [(x,y) for x in [100] for y in np.hstack([[1000],np.arange(5000,45000,1000)])]
 #tRange2 = [(x,y) for x in np.hstack([[100,500],np.arange(1000,45000,1000)]) for y in [45000]]
-#tRange = zip(np.arange(0,45000,500),np.arange(500,45500,500))
+#tRange3 = zip(np.arange(0,45000,500),np.arange(500,45500,500))
 #tRange = np.vstack([tRange1,tRange2,tRange3])
 
-tRange = [(100,39200)]
-lensNoise(Config,expName,lensName,kellmaxOverride=kmax,tRange=tRange,delensTolerance = delensTolerance)
+#tRange = [(100,39200)]
+#tRange = [(100,45000)]
+#lensNoise(Config,expName,lensName,kellmaxOverride=kmax,tRange=tRange,delensTolerance = delensTolerance)
+lensNoise(Config,expName,lensName,kellmaxOverride=kmax,delensTolerance = delensTolerance)
 #lensNoise(Config,expName,lensName,tellminOverride=lmin,pellminOverride=lmin,tellmaxOverride=lmax,pellmaxOverride=lmax,kellmaxOverride=kmax,tRange=tRange,delensTolerance = delensTolerance)
-#lensNoise(Config,expName,lensName,kellmaxOverride=kmax,delensTolerance = delensTolerance)
 #print 'Results: ',lsmv,Nlmv,ells,dclbb,efficiency
