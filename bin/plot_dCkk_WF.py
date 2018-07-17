@@ -11,7 +11,8 @@ dash = [[1,0.001],[2,5],[10,5,2,5]]
 fig = plt.figure(figsize=(10,8))
 c = ['navy','m','lime']
 suffix = ['_cut_ibarrier_iconc','_cut_ibarrier_iconc','_cut_ibarrier_iconc']
-prefix = ['May21','May21','May21']
+#prefix = ['May21','May21','May21']
+prefix = ['Apr3','Apr3','Apr3']
 mass = ['_FDM_1.0','_FDM_0.01','_WDM_1.0']
 label = ['$10^{-22}$eV FDM','$10^{-24}$eV FDM','1keV WDM']
 for i in range(len(suffix)):
@@ -32,6 +33,6 @@ plt.xscale('log')
 plt.legend(loc = 'lower left')
 plt.xlabel('$L$',fontsize=24)
 plt.ylabel('$(C^{\kappa\kappa}_L - C^{\kappa\kappa,\\rm CDM}_L)/ C^{\kappa\kappa,\\rm CDM}_L$',fontsize=24)
-
-#plt.show()
-plt.savefig('output/June2_dCkk_WF.pdf')
+plt.xlim([10,1e8])
+plt.show()
+#plt.savefig('output/June2_dCkk_WF.pdf')

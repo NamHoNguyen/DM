@@ -14,7 +14,7 @@ colors = itertools.cycle(['b','g','r','c','m','y','k'])
 
 def Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zArr=[],omk=0,whatPS=-1,log=True):
     c = 2.99792458e5
-    '''
+    
     # Planck 2015
     ombh2 = 0.02222 #0.0225
     omch2 = 0.1197 #0.125
@@ -28,7 +28,7 @@ def Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zArr=[],omk=0,whatPS=-1,log
     ns = 0.967
     tau = 0.085
     As = 2.42e-9
-    
+    '''
     #whatPS options:
     # 0 - potential
     # 1 - matter (axionCAMB)
@@ -75,7 +75,7 @@ def Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zArr=[],omk=0,whatPS=-1,log
     print min(ks),max(ks),min(zrange),max(zrange)
 
     # Can change this number to change the L range++
-    nz = 200 #number of steps to use for the radial/redshift integration
+    nz = 20 #number of steps to use for the radial/redshift integration
     kmax=int(max(ks))  #kmax to use
 
 
@@ -188,8 +188,10 @@ def Matter2Lens_Limber(powerFile,H0,omm,lmin,lmax,nl,zArr=[],omk=0,whatPS=-1,log
 
 def main(argv):
     
-    powerFiles = ['Oct16_fdm_0.5_cut_ibarrier_iconc.dat','Oct16_fdm_1.5_cut_ibarrier_iconc.dat'] #['May21_cdm_1.0_cut_ibarrier_iconc.dat']#['May21_wdm_1.0_cut_ibarrier_iconc.dat'] #'May21_cdm_1.0_cut_ibarrier_iconc.dat','May21_fdm_1.0_cut_ibarrier_iconc.dat']  #'May12_fdm_1.0_cut_zmax14_ibarrier_iconc.dat'] #'May12_cdm_0.1_cut_zmax14.dat',
-    labels  = ['WF_FDM_0.5_cut_ibarrier_iconc','WF_FDM_1.5_cut_ibarrier_iconc']#['WF_CDM_1.0_cut_ibarrier_iconc']#['WF_WDM_1.0_cut_ibarrier_iconc'] #'WF_CDM_1.0_cut_ibarrier_iconc','WF_FDM_1.0_cut_ibarrier_iconc'] #'WF_CDM_cut_zmax14',
+    #powerFiles = ['Oct16_fdm_0.5_cut_ibarrier_iconc.dat','Oct16_fdm_1.5_cut_ibarrier_iconc.dat']
+    powerFiles = ['May21_cdm_1.0_cut_ibarrier_iconc.dat','May21_wdm_1.0_cut_ibarrier_iconc.dat','May21_fdm_1.0_cut_ibarrier_iconc.dat','May21_fdm_0.01_cut_ibarrier_iconc.dat']  #'May12_fdm_1.0_cut_zmax14_ibarrier_iconc.dat'] #'May12_cdm_0.1_cut_zmax14.dat',
+    #labels = ['WF_FDM_0.5_cut_ibarrier_iconc','WF_FDM_1.5_cut_ibarrier_iconc']
+    labels = ['WF_CDM_cut_ibarrier_iconc','WF_WDM_1.0_cut_ibarrier_iconc','WF_FDM_1.0_cut_ibarrier_iconc','WF_FDM_0.01_cut_ibarrier_iconc'] #'WF_CDM_cut_zmax14',
     whatPS = [2,2,2,2]
     
     zmaxArr = [[],[],[],[],[],[],[]]
@@ -199,7 +201,7 @@ def main(argv):
     H0 = 67.31 #70.2
 
     lmin = 10
-    lmax = 60000
+    lmax = 4900000
     '''
     powerFiles = ['powtable_AGN_WMAP7_ready.dat','powtable_DMONLY_WMAP7_ready.dat']
     labels  = ['AGN_WMAP7','DMONLY_WMAP7']
@@ -214,7 +216,7 @@ def main(argv):
     lmin = 10
     lmax = 60000 #25600
     '''
-    nl = 1000
+    nl = 10000
     log = False
 
     #zmins = [0.,2.,4.,6.,0.]
@@ -256,7 +258,8 @@ def main(argv):
             #ax.loglog(l,(l*(l+1.))**2*Cls[:,1]/(2.*np.pi),label=label)
             ax.loglog(l,Clkk[:,1],color,label=label)
             #ax.plot(l,(l*(l+1.))**2*Cls[:,1]/4.,label=label)
-            np.savetxt('data/Oct16_matter2lens_'+label+'_fCls.csv',Clkk)
+            #np.savetxt('data/Oct16_matter2lens_'+label+'_fCls.csv',Clkk)
+            np.savetxt('data/Apr3_matter2lens_'+label+'_fCls.csv',Clkk)
             
     ax.set_ylabel('$[\ell(\ell+1)]^2C_\ell^{\phi\phi}/4$',size=20)
     ax.set_xlabel('$\ell$',size=20)
